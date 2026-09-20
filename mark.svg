@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="400" height="250" role="img" aria-label="Tên thương hiệu phản chiếu hai bên, chip VS ở trục giữa">
+<rect width="100%" height="100%" fill="#08090A"/>
+<line x1="200" y1="52" x2="200" y2="196" stroke="#F4F5F7" stroke-width="2" opacity="0.22"/>
+<text x="168" y="150" font-family="Anton, Haettenschweiler, Impact, 'Arial Narrow', sans-serif" font-size="50" font-weight="400" letter-spacing="0" text-anchor="end" fill="#F4F5F7">KAIZEN</text>
+<g transform="translate(400,0) scale(-1,1)">
+<text x="168" y="150" font-family="Anton, Haettenschweiler, Impact, 'Arial Narrow', sans-serif" font-size="50" font-weight="400" letter-spacing="0" text-anchor="end" fill="#AA4946" opacity="0.62">KAIZEN</text>
+</g>
+<g transform="translate(200,131) rotate(45)">
+<rect x="-17" y="-17" width="34" height="34" fill="#AA4946"/>
+</g>
+<text x="200" y="137" font-family="Anton, Haettenschweiler, Impact, 'Arial Narrow', sans-serif" font-size="16" font-weight="400" letter-spacing="0" text-anchor="middle" fill="#FFFFFF">VS</text>
+<text x="200" y="226" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="5" text-anchor="middle" fill="#F4F5F7" opacity="0.6">ME VS ME</text>
+</svg>
