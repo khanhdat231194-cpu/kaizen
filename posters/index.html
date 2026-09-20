@@ -145,7 +145,24 @@
     });
   });
 
-  setTimeout(function(){ if (!sawCallback) revealNow(rows); }, 2000);
+  // Chốt chặn: chỉ cứu khi observer thật sự không hoạt động VÀ trang đang được xem.
+  // Document ẩn thì IO vốn không giao callback và animation bị đóng băng, nên đợi
+  // tới lúc trang hiện ra rồi hãy tính — để không hiện phẳng thẻ sau lưng người dùng.
+  function armFailsafe(){
+    setTimeout(function(){
+      if (sawCallback) return;
+      if (document.visibilityState === "hidden") { waitForVisible(); return; }
+      revealNow(rows);
+    }, 2000);
+  }
+  function waitForVisible(){
+    document.addEventListener("visibilitychange", function once(){
+      if (document.visibilityState === "hidden") return;
+      document.removeEventListener("visibilitychange", once);
+      armFailsafe();
+    });
+  }
+  if (document.visibilityState === "hidden") { waitForVisible(); } else { armFailsafe(); }
 })();
 </script>
 </body>
