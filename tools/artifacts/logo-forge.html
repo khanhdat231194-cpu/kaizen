@@ -1,0 +1,605 @@
+<title>Xưởng Logo Kaizen</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --bg:#EEF0F3; --surface:#FFFFFF; --surface-2:#E5E8ED;
+    --fg:#14161A; --fg-muted:#5C636E; --line:#CDD2DA;
+    --shadow:0 1px 2px rgba(16,20,28,.05), 0 10px 28px -16px rgba(16,20,28,.22);
+    --a:#16A6D9; --a-deep:#0B6E93; --a-soft:#8FD9F0;
+    --stage-bg:#08090A; --stage-fg:#F4F5F7;
+    --accent-label:#0B6E93;
+    --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --body:Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --display:Anton, Haettenschweiler, Impact, "Arial Narrow", sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1013; --surface:#171A1F; --surface-2:#1E232A;
+      --fg:#EDEFF3; --fg-muted:#949CA8; --line:#2C323A;
+      --shadow:0 1px 2px rgba(0,0,0,.5), 0 14px 32px -18px rgba(0,0,0,.8);
+      --accent-label:#5EC8EC;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1013; --surface:#171A1F; --surface-2:#1E232A;
+    --fg:#EDEFF3; --fg-muted:#949CA8; --line:#2C323A;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 14px 32px -18px rgba(0,0,0,.8);
+    --accent-label:#5EC8EC;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1200px;margin:0 auto;padding-inline:20px;padding-block:30px 60px}
+
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-label);margin:0}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,6.4vw,56px);line-height:.98;margin:10px 0 0;text-wrap:balance;text-transform:uppercase}
+  .lede{margin:12px 0 0;max-width:64ch;color:var(--fg-muted);font-size:15px}
+  .rule{height:1px;background:var(--line);margin:26px 0 28px;border:0}
+
+  .shell{display:grid;gap:26px;grid-template-columns:1fr;align-items:start}
+  @media (min-width:980px){
+    .shell{grid-template-columns:330px minmax(0,1fr);gap:34px}
+    .rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px)}
+  }
+
+  .rail{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:20px}
+  .field{display:flex;flex-direction:column;gap:8px}
+  .lbl{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--fg-muted)}
+
+  .wheelbox{position:relative;width:220px;max-width:100%;aspect-ratio:1;margin:2px auto 0;touch-action:none}
+  canvas{width:100%;height:100%;display:block;border-radius:50%;cursor:crosshair}
+  .handle{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.4);pointer-events:none;background:var(--a)}
+
+  .readout{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .hex{font-family:var(--mono);font-weight:600;font-size:19px}
+  .hsl{font-family:var(--mono);font-size:11px;color:var(--fg-muted);font-variant-numeric:tabular-nums}
+  .pill{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:3px 7px;border-radius:2px;letter-spacing:.04em;white-space:nowrap}
+  .pill.ok{background:var(--surface-2);color:var(--fg)}
+  .pill.warn{background:#F0B429;color:#241A00}
+
+  .slider{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+  .slider .lbl{grid-column:1}
+  .slider output{grid-column:2;font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums;color:var(--fg-muted)}
+  input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--a);height:22px;margin:0}
+  input[type=range]:focus-visible{outline:2px solid var(--a);outline-offset:3px;border-radius:2px}
+
+  .tones{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+  .tone{border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;gap:4px;background:none;font:inherit;text-align:center}
+  .tone i{display:block;height:34px;border-radius:2px;border:1px solid rgba(0,0,0,.14)}
+  .tone em{font-family:var(--mono);font-style:normal;font-size:8.5px;color:var(--fg-muted)}
+  .tone[aria-current="true"] i{box-shadow:0 0 0 2px var(--fg)}
+  .tone:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+
+  .hues{display:flex;gap:5px;flex-wrap:wrap}
+  .hue{width:28px;height:28px;border-radius:50%;border:1px solid rgba(0,0,0,.18);cursor:pointer;padding:0}
+  .hue:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+
+  .seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+  .seg button{flex:1;border:0;background:var(--surface);color:var(--fg-muted);font:inherit;font-size:12px;font-weight:600;padding:8px 6px;cursor:pointer}
+  .seg button+button{border-left:1px solid var(--line)}
+  .seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+  .seg button:focus-visible{outline:2px solid var(--a);outline-offset:-2px}
+
+  input[type=text]{font:inherit;font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:3px;background:var(--bg);color:var(--fg);width:100%}
+  input[type=text]:focus-visible{outline:2px solid var(--a);outline-offset:1px;border-color:var(--a)}
+  .duo{display:grid;grid-template-columns:1fr 78px;gap:8px}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:4px;box-shadow:var(--shadow);overflow:hidden}
+  .stage{background:var(--stage-bg);padding:26px 22px;display:flex;align-items:center;justify-content:center}
+  .primary .stage{padding:34px 28px}
+  .stage svg{width:100%;height:auto;max-width:100%;display:block}
+  .meta{padding:14px 16px 16px;display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+  .meta h3{margin:0;font-size:14px;font-weight:700}
+  .meta p{margin:4px 0 0;font-size:12.5px;color:var(--fg-muted);max-width:48ch}
+  .idx{font-family:var(--mono);font-size:11px;color:var(--fg-muted);font-variant-numeric:tabular-nums}
+  .acts{display:flex;gap:6px;flex-wrap:wrap}
+  .btn{font:inherit;font-size:11.5px;font-weight:600;padding:6px 10px;border-radius:2px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;white-space:nowrap}
+  .btn:hover{border-color:var(--a)}
+  .btn:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+  pre.code{margin:0;border-top:1px solid var(--line);background:var(--surface-2);padding:12px 14px;font-family:var(--mono);font-size:10.5px;line-height:1.55;overflow-x:auto;max-height:190px;overflow-y:auto;white-space:pre}
+
+  .sechead{display:flex;align-items:baseline;gap:12px;margin:34px 0 14px;flex-wrap:wrap}
+  .sechead h2{margin:0;font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.02em;text-transform:uppercase}
+  .sechead span{font-family:var(--mono);font-size:11px;color:var(--fg-muted)}
+  .grid{display:grid;gap:18px;grid-template-columns:1fr}
+  @media (min-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;color:var(--fg-muted);font-size:12.5px;max-width:76ch}
+  footer code{font-family:var(--mono);font-size:11.5px;background:var(--surface-2);padding:1px 5px;border-radius:2px}
+
+  .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);background:var(--fg);color:var(--bg);font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:3px;box-shadow:var(--shadow);z-index:50;max-width:90vw;text-align:center}
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Bộ tạo nhận diện · manga ink</p>
+    <h1>Xưởng Logo Kaizen</h1>
+    <p class="lede">Sáu phương án logo dựng từ <strong>một</strong> màu duy nhất lấy trên bánh xe màu. Kéo <strong>độ bão hòa</strong> và <strong>độ sáng</strong> để cả hệ thống đổi theo — mọi sắc phụ đều suy ra từ màu gốc bằng độ mờ, nên logo không bao giờ lệch tông.</p>
+  </header>
+  <hr class="rule">
+
+  <div class="shell">
+    <aside class="rail">
+      <div class="field">
+        <span class="lbl">Bánh xe màu — góc = sắc, bán kính = bão hòa</span>
+        <div class="wheelbox" id="wheelbox">
+          <canvas id="wheel" width="220" height="220" role="img" aria-label="Bánh xe màu. Dùng ba thanh trượt bên dưới để chỉnh chính xác bằng bàn phím."></canvas>
+          <div class="handle" id="handle"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="readout">
+          <span class="hex" id="hexOut">#16A6D9</span>
+          <span class="pill ok" id="cr">3.2:1</span>
+        </div>
+        <span class="hsl" id="hslOut">hsl(196 92% 52%)</span>
+      </div>
+
+      <div class="field">
+        <div class="slider">
+          <label class="lbl" for="hue">Sắc độ</label><output id="hueOut" for="hue">196°</output>
+          <input type="range" id="hue" min="0" max="360" step="1" value="196">
+        </div>
+        <div class="slider">
+          <label class="lbl" for="sat">Độ bão hòa</label><output id="satOut" for="sat">92%</output>
+          <input type="range" id="sat" min="0" max="100" step="1" value="92">
+        </div>
+        <div class="slider">
+          <label class="lbl" for="lig">Độ sáng</label><output id="ligOut" for="lig">52%</output>
+          <input type="range" id="lig" min="4" max="96" step="1" value="52">
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="lbl">Dải sắc phái sinh — bấm để đổi độ sáng</span>
+        <div class="tones" id="tones"></div>
+      </div>
+
+      <div class="field">
+        <span class="lbl">Sắc gợi ý từ bảng màu</span>
+        <div class="hues" id="hues"></div>
+      </div>
+
+      <div class="field">
+        <span class="lbl">Nền hiển thị</span>
+        <div class="seg" id="ground">
+          <button type="button" data-g="ink" aria-pressed="true">Mực đen</button>
+          <button type="button" data-g="paper" aria-pressed="false">Giấy trắng</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="brand">Tên thương hiệu &amp; chữ viết tắt</label>
+        <div class="duo">
+          <input type="text" id="brand" value="KAIZEN" maxlength="14" spellcheck="false" autocomplete="off">
+          <input type="text" id="mono" value="K" maxlength="2" spellcheck="false" autocomplete="off" aria-label="Chữ viết tắt trong con dấu">
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl" for="tag">Slogan</label>
+        <input type="text" id="tag" value="ME VS ME" maxlength="22" spellcheck="false" autocomplete="off">
+      </div>
+    </aside>
+
+    <main>
+      <article class="card primary">
+        <div class="stage" data-stage="seal"></div>
+        <div class="meta">
+          <div>
+            <h3><span class="idx">01 ·</span> Con dấu chính</h3>
+            <p>Chữ viết tắt khoét âm trong đĩa đặc, tia tốc độ manga bung về phía sau. Đĩa ăn màu gốc, tia là màu gốc giảm mờ — cả logo chỉ một mã màu.</p>
+          </div>
+          <div class="acts">
+            <button class="btn" type="button" data-copy="seal">Sao chép SVG</button>
+            <button class="btn" type="button" data-show="seal">Xem mã</button>
+          </div>
+        </div>
+        <pre class="code" data-code="seal" hidden></pre>
+      </article>
+
+      <div class="sechead">
+        <h2>Năm phương án khác</h2>
+        <span>một màu · sáu hình thái</span>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </main>
+  </div>
+
+  <footer>
+    <p>Mã SVG xuất ra đã nạp sẵn mã hex hiện tại, không dùng biến CSS, nên dán vào Figma hay Illustrator là ra đúng màu. Chữ vẫn là text sống với font <code>Anton</code> và <code>Archivo</code> — trước khi đưa in ấn hãy convert text sang path để không lệ thuộc font cài trên máy. Chỉ số <code>x:1</code> cạnh mã màu là tỷ lệ tương phản so với nền đang chọn; mốc <code>3:1</code> là ngưỡng WCAG cho hình khối phi văn bản.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var INK = "#08090A", PAPER = "#F4F5F7";
+  var ANTON = "Anton, Haettenschweiler, Impact, 'Arial Narrow', sans-serif";
+  var ARCHIVO = "Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif";
+  var MONOFF = "'JetBrains Mono', ui-monospace, Menlo, monospace";
+
+  var state = { h:196, s:92, l:52, ground:"ink", brand:"KAIZEN", tag:"ME VS ME", mono:"K" };
+  var monoTouched = false;
+
+  /* ---------- màu ---------- */
+  function hsl2rgb(h,s,l){
+    s = s/100; l = l/100;
+    var k = function(n){ return (n + h/30) % 12; };
+    var a = s * Math.min(l, 1-l);
+    var f = function(n){ return l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n), 1))); };
+    return [Math.round(f(0)*255), Math.round(f(8)*255), Math.round(f(4)*255)];
+  }
+  function hex(rgb){
+    return "#" + rgb.map(function(v){ return ("0" + v.toString(16)).slice(-2); }).join("").toUpperCase();
+  }
+  function lum(rgb){
+    var f = function(v){ v = v/255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); };
+    return 0.2126*f(rgb[0]) + 0.7152*f(rgb[1]) + 0.0722*f(rgb[2]);
+  }
+  function contrast(a,b){
+    var x = lum(a), y = lum(b);
+    return (Math.max(x,y) + 0.05) / (Math.min(x,y) + 0.05);
+  }
+  function clamp(v,lo,hi){ return Math.max(lo, Math.min(hi, v)); }
+  function esc(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function palette(){
+    var A = hsl2rgb(state.h, state.s, state.l);
+    var deep = hsl2rgb(state.h, clamp(state.s+6,0,100), clamp(state.l-24,6,96));
+    var soft = hsl2rgb(state.h, clamp(state.s-22,0,100), clamp(state.l+26,6,96));
+    var groundRgb = state.ground === "ink" ? [8,9,10] : [244,245,247];
+    return {
+      a: hex(A), deep: hex(deep), soft: hex(soft),
+      bg: state.ground === "ink" ? INK : PAPER,
+      fg: state.ground === "ink" ? PAPER : INK,
+      onA: contrast(A,[255,255,255]) >= contrast(A,[8,9,10]) ? "#FFFFFF" : "#08090A",
+      cr: contrast(A, groundRgb),
+      brand: (state.brand || "KAIZEN").toUpperCase(),
+      tag: (state.tag || "").toUpperCase(),
+      mono: (state.mono || "K").toUpperCase()
+    };
+  }
+
+  /* ---------- tiện ích vẽ ---------- */
+  function txt(x,y,s,o){
+    o = o || {};
+    return '<text x="' + x + '" y="' + y + '" font-family="' + (o.ff || ARCHIVO) + '"'
+      + ' font-size="' + (o.fs || 14) + '" font-weight="' + (o.fw || 700) + '"'
+      + ' letter-spacing="' + (o.ls || 0) + '" text-anchor="' + (o.ta || "start") + '"'
+      + ' fill="' + o.fill + '"' + (o.op != null ? ' opacity="' + o.op + '"' : "")
+      + '>' + esc(s) + '</text>';
+  }
+  function fit(word, big, small, cut){
+    return word.length > (cut || 8) ? small : big;
+  }
+
+  /* ---------- sáu phương án ---------- */
+  var LOGOS = {};
+
+  LOGOS.seal = function(c,k){
+    var cx = 86, cy = 86, r = 62, out = "";
+    [[138,28],[158,17],[178,36],[198,17],[218,28]].forEach(function(ray){
+      var t = ray[0] * Math.PI/180, len = ray[1];
+      out += '<line x1="' + (cx + Math.cos(t)*(r+7)).toFixed(1) + '" y1="' + (cy + Math.sin(t)*(r+7)).toFixed(1)
+        + '" x2="' + (cx + Math.cos(t)*(r+7+len)).toFixed(1) + '" y2="' + (cy + Math.sin(t)*(r+7+len)).toFixed(1)
+        + '" stroke="' + c.a + '" stroke-width="5" opacity="0.55"/>';
+    });
+    out += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + c.a + '"/>';
+    out += txt(cx, cy+26, c.mono, {ff:ANTON, fw:400, fs:76, ta:"middle", fill:c.bg});
+    out += txt(184, 84, c.brand, {ff:ANTON, fw:400, fs:fit(c.brand,60,44), ls:1, fill:c.fg});
+    out += '<rect x="184" y="98" width="30" height="4" fill="' + c.a + '"/>';
+    if(c.tag) out += txt(184, 128, c.tag, {fs:12, fw:600, ls:5.4, fill:c.a});
+    return { vb:"0 0 560 172", body:out, label:"Con dấu chính: chữ viết tắt khoét âm trong đĩa màu thương hiệu" };
+  };
+
+  LOGOS.neon = function(c,k){
+    var fig = '<path d="M112,66 H288"/>'
+      + '<path d="M150,66 L168,108"/><path d="M250,66 L232,108"/>'
+      + '<path d="M168,108 H232"/>'
+      + '<path d="M168,110 L182,166 H218 L232,110"/>'
+      + '<path d="M186,166 C184,192 194,204 212,206"/>'
+      + '<path d="M214,166 C216,192 206,204 188,206"/>'
+      + '<circle cx="150" cy="66" r="7"/><circle cx="250" cy="66" r="7"/>';
+    var out = '<defs><filter id="' + k + '-glow" x="-30%" y="-30%" width="160%" height="160%">'
+      + '<feGaussianBlur stdDeviation="5"/></filter></defs>'
+      + '<g fill="none" stroke="' + c.a + '" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"'
+      + ' opacity="0.32" filter="url(#' + k + '-glow)">' + fig + '</g>'
+      + '<g fill="none" stroke="' + c.a + '" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">' + fig + '</g>'
+      + txt(200, 236, c.brand, {fs:14, fw:700, ls:7, ta:"middle", fill:c.fg});
+    return { vb:"0 0 400 250", body:out, label:"Logo nét đơn phát sáng, hình người hít xà" };
+  };
+
+  LOGOS.arc = function(c,k){
+    var out = '<defs><path id="' + k + '-arc" d="M 100,152 A 100,100 0 0 1 300,152" fill="none"/></defs>'
+      + '<text font-family="' + ANTON + '" font-weight="400" font-size="' + fit(c.brand,46,36)
+      + '" letter-spacing="2" fill="' + c.fg + '">'
+      + '<textPath href="#' + k + '-arc" startOffset="50%" text-anchor="middle">' + esc(c.brand) + '</textPath></text>'
+      + '<path d="M200,158 L142,176 L130,214 L196,198 Z" fill="' + c.a + '"/>'
+      + '<path d="M200,158 L258,176 L270,214 L204,198 Z" fill="' + c.a + '" opacity="0.6"/>';
+    if(c.tag) out += txt(200, 240, c.tag, {fs:11, fw:600, ls:5, ta:"middle", fill:c.fg, op:0.6});
+    return { vb:"0 0 400 250", body:out, label:"Chữ chạy theo vòm cung trên khối cơ lưng cách điệu" };
+  };
+
+  LOGOS.reps = function(c,k){
+    var fs = fit(c.brand,52,40);
+    var out = '<rect x="0" y="112" width="400" height="60" fill="' + c.a + '" opacity="0.14"/>'
+      + '<line x1="0" y1="112" x2="400" y2="112" stroke="' + c.a + '" stroke-width="1.5" opacity="0.4"/>'
+      + '<line x1="0" y1="172" x2="400" y2="172" stroke="' + c.a + '" stroke-width="1.5" opacity="0.4"/>'
+      + txt(28, 94, c.brand, {ff:ANTON, fw:400, fs:fs, fill:c.fg, op:0.22})
+      + txt(28, 158, c.brand, {ff:ANTON, fw:400, fs:fs, fill:c.a})
+      + txt(28, 222, c.brand, {ff:ANTON, fw:400, fs:fs, fill:c.fg, op:0.22})
+      + txt(372, 42, "SET 03", {ff:MONOFF, fs:10, fw:600, ls:3, ta:"end", fill:c.fg, op:0.5});
+    return { vb:"0 0 400 250", body:out, label:"Tên thương hiệu lặp ba lần như ba set, set giữa mang màu gốc" };
+  };
+
+  LOGOS.mirror = function(c,k){
+    var fs = fit(c.brand,50,38,7);
+    var out = '<line x1="200" y1="52" x2="200" y2="196" stroke="' + c.fg + '" stroke-width="2" opacity="0.22"/>'
+      + txt(178, 150, c.brand, {ff:ANTON, fw:400, fs:fs, ta:"end", fill:c.fg})
+      + '<g transform="translate(400,0) scale(-1,1)">'
+      + txt(178, 150, c.brand, {ff:ANTON, fw:400, fs:fs, ta:"end", fill:c.a, op:0.62})
+      + '</g>'
+      + '<g transform="translate(200,131) rotate(45)"><rect x="-17" y="-17" width="34" height="34" fill="' + c.a + '"/></g>'
+      + txt(200, 137, "VS", {ff:ANTON, fw:400, fs:16, ta:"middle", fill:c.onA});
+    if(c.tag) out += txt(200, 226, c.tag, {fs:11, fw:600, ls:5, ta:"middle", fill:c.fg, op:0.6});
+    return { vb:"0 0 400 250", body:out, label:"Tên thương hiệu phản chiếu hai bên, chip VS ở trục giữa" };
+  };
+
+  LOGOS.chop = function(c,k){
+    var lines = "";
+    [66,82,126,142].forEach(function(y){
+      lines += '<line x1="96" y1="' + y + '" x2="304" y2="' + y + '" stroke="' + c.bg + '" stroke-width="7" opacity="0.5"/>';
+    });
+    var out = '<defs><clipPath id="' + k + '-clip">'
+      + '<rect x="-62" y="-62" width="124" height="124" rx="6" transform="translate(200,112) rotate(45)"/>'
+      + '</clipPath></defs>'
+      + '<g transform="translate(200,112) rotate(45)"><rect x="-68" y="-68" width="136" height="136" rx="8" fill="none" stroke="' + c.fg + '" stroke-width="1.5" opacity="0.2"/></g>'
+      + '<g transform="translate(200,112) rotate(45)"><rect x="-62" y="-62" width="124" height="124" rx="6" fill="' + c.a + '"/></g>'
+      + '<g clip-path="url(#' + k + '-clip)">' + lines + '</g>'
+      + txt(200, 136, c.mono, {ff:ANTON, fw:400, fs:66, ta:"middle", fill:c.onA})
+      + txt(200, 234, c.brand, {fs:14, fw:700, ls:7, ta:"middle", fill:c.fg});
+    return { vb:"0 0 400 250", body:out, label:"Dấu triện hình thoi với tia tốc độ khoét âm" };
+  };
+
+  var ALTS = [
+    {key:"neon",   n:"Neon Bar", d:"Một nét duy nhất, viền phát sáng — đúng tinh thần ảnh hít xà. Hạ độ bão hòa xuống 0 là có ngay bản đơn sắc cho dấu nước."},
+    {key:"arc",    n:"Vòm cung", d:"Chữ uốn theo cung tròn đặt trên khối cơ lưng cách điệu, dựng lại kiểu chữ vòm trong ảnh FOCUS."},
+    {key:"reps",   n:"Reps",     d:"Ba dòng lặp chính là ba set: hai set mờ, set giữa ăn màu. Cấu trúc lặp chỉ dùng được vì nội dung thật sự là một chuỗi."},
+    {key:"mirror", n:"Đối kính", d:"Mình đối đầu chính mình — tên thương hiệu lật ngược qua trục giữa, chip VS chốt điểm nhìn."},
+    {key:"chop",   n:"Ấn mực",   d:"Triện kiểu manga: khối đặc màu gốc, tia tốc độ khoét bằng chính màu nền nên luôn sạch nét trên mọi nền."}
+  ];
+
+  document.getElementById("grid").innerHTML = ALTS.map(function(it,i){
+    return '<article class="card">'
+      + '<div class="stage" data-stage="' + it.key + '"></div>'
+      + '<div class="meta"><div><h3><span class="idx">0' + (i+2) + ' ·</span> ' + it.n + '</h3>'
+      + '<p>' + it.d + '</p></div>'
+      + '<div class="acts"><button class="btn" type="button" data-copy="' + it.key + '">Sao chép SVG</button>'
+      + '<button class="btn" type="button" data-show="' + it.key + '">Xem mã</button></div></div>'
+      + '<pre class="code" data-code="' + it.key + '" hidden></pre></article>';
+  }).join("");
+
+  /* ---------- render ---------- */
+  var built = {};
+  function render(){
+    var c = palette();
+    var root = document.documentElement.style;
+    root.setProperty("--a", c.a);
+    root.setProperty("--a-deep", c.deep);
+    root.setProperty("--a-soft", c.soft);
+    root.setProperty("--stage-bg", c.bg);
+    root.setProperty("--stage-fg", c.fg);
+
+    Object.keys(LOGOS).forEach(function(key){
+      var stage = document.querySelector('[data-stage="' + key + '"]');
+      if(!stage) return;
+      var g = LOGOS[key](c, key);
+      g.bg = c.bg;
+      built[key] = g;
+      stage.innerHTML = '<svg viewBox="' + g.vb + '" role="img" aria-label="' + esc(g.label) + '">' + g.body + '</svg>';
+      var pre = document.querySelector('[data-code="' + key + '"]');
+      if(pre && !pre.hidden) pre.textContent = exportSvg(key);
+    });
+
+    document.getElementById("hexOut").textContent = c.a;
+    document.getElementById("hslOut").textContent = "hsl(" + state.h + " " + state.s + "% " + state.l + "%)";
+    document.getElementById("hueOut").textContent = state.h + "°";
+    document.getElementById("satOut").textContent = state.s + "%";
+    document.getElementById("ligOut").textContent = state.l + "%";
+
+    var cr = document.getElementById("cr");
+    var ok = c.cr >= 3;
+    cr.className = "pill " + (ok ? "ok" : "warn");
+    cr.textContent = c.cr.toFixed(1) + ":1 " + (ok ? "đủ tương phản" : "quá chìm vào nền");
+
+    drawTones();
+    placeHandle();
+  }
+
+  function exportSvg(key){
+    var g = built[key];
+    var parts = g.vb.split(" ");
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + g.vb + '" width="' + parts[2]
+      + '" height="' + parts[3] + '" role="img" aria-label="' + esc(g.label) + '">\n'
+      + g.body.replace(/></g, ">\n<") + "\n</svg>";
+  }
+
+  /* ---------- dải sắc phái sinh ---------- */
+  var tonesEl = document.getElementById("tones");
+  function drawTones(){
+    tonesEl.innerHTML = [-32,-16,0,16,32].map(function(d){
+      var L = clamp(state.l + d, 6, 96);
+      return '<button class="tone" type="button" data-l="' + L + '" aria-current="' + (L === state.l)
+        + '" title="Đặt độ sáng ' + L + '%"><i style="background:' + hex(hsl2rgb(state.h, state.s, L))
+        + '"></i><em>' + L + '%</em></button>';
+    }).join("");
+  }
+  tonesEl.addEventListener("click", function(e){
+    var b = e.target.closest(".tone");
+    if(!b) return;
+    state.l = parseInt(b.getAttribute("data-l"), 10);
+    document.getElementById("lig").value = state.l;
+    drawWheel(); render();
+  });
+
+  /* ---------- sắc gợi ý ---------- */
+  var PRESETS = [
+    {h:14,s:88,l:52}, {h:36,s:95,l:56}, {h:52,s:94,l:58}, {h:142,s:62,l:44},
+    {h:196,s:92,l:52}, {h:232,s:74,l:56}, {h:284,s:58,l:52}, {h:334,s:78,l:54}
+  ];
+  var huesEl = document.getElementById("hues");
+  huesEl.innerHTML = PRESETS.map(function(p){
+    return '<button class="hue" type="button" data-p="' + p.h + "," + p.s + "," + p.l + '"'
+      + ' style="background:' + hex(hsl2rgb(p.h,p.s,p.l)) + '" aria-label="Sắc ' + p.h + ' độ"></button>';
+  }).join("");
+  huesEl.addEventListener("click", function(e){
+    var b = e.target.closest(".hue");
+    if(!b) return;
+    var v = b.getAttribute("data-p").split(",").map(Number);
+    state.h = v[0]; state.s = v[1]; state.l = v[2];
+    syncSliders(); drawWheel(); render();
+  });
+
+  /* ---------- bánh xe màu ---------- */
+  var canvas = document.getElementById("wheel");
+  var ctx = canvas.getContext("2d");
+  var SIZE = 220;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = SIZE * dpr;
+  canvas.height = SIZE * dpr;
+  var pending = false;
+
+  function drawWheel(){
+    if(pending) return;
+    pending = true;
+    requestAnimationFrame(function(){
+      pending = false;
+      var n = SIZE * dpr, img = ctx.createImageData(n,n), d = img.data;
+      var R = n/2, L = state.l;
+      for(var y=0; y<n; y++){
+        for(var x=0; x<n; x++){
+          var dx = x - R + 0.5, dy = y - R + 0.5;
+          var rr = Math.sqrt(dx*dx + dy*dy) / R;
+          var i = (y*n + x) * 4;
+          if(rr > 1){ d[i+3] = 0; continue; }
+          var rgb = hsl2rgb((Math.atan2(dy,dx) * 180/Math.PI + 360) % 360, clamp(rr*100, 0, 100), L);
+          d[i] = rgb[0]; d[i+1] = rgb[1]; d[i+2] = rgb[2];
+          d[i+3] = rr > 0.97 ? Math.round(255 * (1 - (rr-0.97)/0.03)) : 255;
+        }
+      }
+      ctx.putImageData(img, 0, 0);
+    });
+  }
+
+  var handle = document.getElementById("handle");
+  function placeHandle(){
+    var t = state.h * Math.PI/180, rad = (state.s/100) * (SIZE/2 - 6);
+    handle.style.left = (SIZE/2 + Math.cos(t)*rad) / SIZE * 100 + "%";
+    handle.style.top  = (SIZE/2 + Math.sin(t)*rad) / SIZE * 100 + "%";
+  }
+
+  var box = document.getElementById("wheelbox");
+  var dragging = false;
+  function pick(e){
+    var r = canvas.getBoundingClientRect();
+    var dx = e.clientX - (r.left + r.width/2);
+    var dy = e.clientY - (r.top + r.height/2);
+    state.h = Math.round((Math.atan2(dy,dx) * 180/Math.PI + 360) % 360);
+    state.s = Math.round(clamp(Math.sqrt(dx*dx + dy*dy) / (r.width/2) * 100, 0, 100));
+    syncSliders(); render();
+  }
+  box.addEventListener("pointerdown", function(e){
+    dragging = true;
+    if(box.setPointerCapture) box.setPointerCapture(e.pointerId);
+    pick(e);
+  });
+  box.addEventListener("pointermove", function(e){ if(dragging) pick(e); });
+  box.addEventListener("pointerup", function(){ dragging = false; });
+  box.addEventListener("pointercancel", function(){ dragging = false; });
+
+  /* ---------- thanh trượt & ô nhập ---------- */
+  function syncSliders(){
+    document.getElementById("hue").value = state.h;
+    document.getElementById("sat").value = state.s;
+    document.getElementById("lig").value = state.l;
+  }
+  document.getElementById("hue").addEventListener("input", function(e){ state.h = +e.target.value; drawWheel(); render(); });
+  document.getElementById("sat").addEventListener("input", function(e){ state.s = +e.target.value; render(); });
+  document.getElementById("lig").addEventListener("input", function(e){ state.l = +e.target.value; drawWheel(); render(); });
+
+  document.getElementById("ground").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-g]");
+    if(!b) return;
+    state.ground = b.getAttribute("data-g");
+    Array.prototype.forEach.call(this.querySelectorAll("button"), function(x){
+      x.setAttribute("aria-pressed", String(x.getAttribute("data-g") === state.ground));
+    });
+    render();
+  });
+
+  var monoIn = document.getElementById("mono");
+  document.getElementById("brand").addEventListener("input", function(e){
+    state.brand = e.target.value;
+    if(!monoTouched){
+      state.mono = (e.target.value.trim()[0] || "K").toUpperCase();
+      monoIn.value = state.mono;
+    }
+    render();
+  });
+  monoIn.addEventListener("input", function(e){ monoTouched = true; state.mono = e.target.value; render(); });
+  document.getElementById("tag").addEventListener("input", function(e){ state.tag = e.target.value; render(); });
+
+  /* ---------- xuất mã ---------- */
+  var toastEl = null, toastTimer = null;
+  function toast(msg){
+    if(!toastEl){
+      toastEl = document.createElement("div");
+      toastEl.className = "toast";
+      toastEl.setAttribute("role", "status");
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.hidden = true; }, 2800);
+  }
+  function showCode(key, open){
+    var pre = document.querySelector('[data-code="' + key + '"]');
+    pre.textContent = exportSvg(key);
+    pre.hidden = !open;
+    var btn = document.querySelector('[data-show="' + key + '"]');
+    if(btn) btn.textContent = open ? "Ẩn mã" : "Xem mã";
+  }
+  document.addEventListener("click", function(e){
+    var copyBtn = e.target.closest("[data-copy]");
+    if(copyBtn){
+      var key = copyBtn.getAttribute("data-copy");
+      var src = exportSvg(key);
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(src).then(
+          function(){ toast("Đã sao chép SVG vào clipboard"); },
+          function(){ showCode(key, true); toast("Không vào được clipboard — mã đã mở bên dưới, chọn rồi copy tay"); }
+        );
+      } else {
+        showCode(key, true);
+        toast("Mã đã mở bên dưới, chọn rồi copy tay");
+      }
+      return;
+    }
+    var showBtn = e.target.closest("[data-show]");
+    if(showBtn){
+      var k2 = showBtn.getAttribute("data-show");
+      showCode(k2, document.querySelector('[data-code="' + k2 + '"]').hidden);
+    }
+  });
+
+  drawWheel();
+  render();
+})();
+</script>

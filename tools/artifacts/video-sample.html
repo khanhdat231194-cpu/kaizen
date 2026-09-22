@@ -1,0 +1,212 @@
+<title>Mẫu Nền Video Focus</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --ink:#07080A; --ink-2:#0E1013; --panel:#14171B; --line:#242A31;
+    --fg:#EBEDF0; --fg-dim:#8A929B; --accent:#DCE3E8;
+    --film:#FAFAFA; --film-edge:#F4F5F7;
+    --ink-text:#08090A; --ink-dim:#41474F; --ink-mute:#5B6570;
+    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    --body:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --display:Anton,Haettenschweiler,Impact,"Arial Narrow",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding-inline:20px;padding-block:26px 56px}
+  .eyebrow{margin:0;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,7vw,60px);line-height:.96;margin:10px 0 0;text-transform:uppercase}
+  h2{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:.03em;text-transform:uppercase;margin:0}
+  .lede{margin:11px 0 0;max-width:56ch;color:var(--fg-dim);font-size:14.5px}
+  .sechead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:38px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .sechead p{margin:0;font-family:var(--mono);font-size:10.5px;color:var(--fg-dim)}
+
+  .intro{position:relative;isolation:isolate;overflow:hidden;
+    min-height:clamp(480px,78vh,820px);display:grid;align-items:end;
+    background:radial-gradient(130% 90% at 50% 42%, var(--film) 38%, var(--film-edge) 100%)}
+  .intro-media{position:absolute;inset:0;z-index:0;display:grid;place-items:center;overflow:hidden}
+
+  /* Ba lop long nhau, moi lop mot nhip, chu ky khong chia het cho nhau */
+  .film-sway{height:100%;width:auto;aspect-ratio:704/1248;max-width:100%;max-height:100%;
+    transform:translateX(2.66%);
+    animation:sway 17s ease-in-out infinite}
+  .film{width:100%;height:100%;
+    animation:breathe 5.2s linear infinite}
+  .film video,.film img{width:100%;height:100%;object-fit:contain;display:block;
+    filter:grayscale(1) contrast(1.03);
+    animation:inkpulse 7.3s ease-in-out infinite alternate}
+
+  /* Troi ngang rat cham, chi de pha tinh co khi cua nhip tho */
+  @keyframes sway{
+    0%{transform:translateX(2.66%) translateX(0)}
+    50%{transform:translateX(2.66%) translateX(-.35%)}
+    100%{transform:translateX(2.66%) translateX(0)}
+  }
+  /* Nhip tho khong doi xung: hit vao 36% chu ky, giu mot nhip ngan, tho ra 55% con lai.
+     Tung chang co duong cong rieng — day la cho tao ra cam giac song. */
+  @keyframes breathe{
+    0%{transform:translateY(0) scale(1);animation-timing-function:cubic-bezier(.33,.66,.3,1)}
+    36%{transform:translateY(-.6%) scale(1.017);animation-timing-function:cubic-bezier(.45,0,.55,1)}
+    45%{transform:translateY(-.52%) scale(1.015);animation-timing-function:cubic-bezier(.4,0,.22,1)}
+    100%{transform:translateY(0) scale(1)}
+  }
+  /* Nhip muc: chong dung pixel, chi doi tuong phan -> soi day dam len, co the gan nhu khong doi */
+  @keyframes inkpulse{
+    from{filter:grayscale(1) contrast(1.03)}
+    to{filter:grayscale(1) contrast(1.15)}
+  }
+  .intro[data-breathe="0"] .film,.intro[data-breathe="0"] .film-sway{animation:none}
+  .intro[data-ink="0"] .film video,.intro[data-ink="0"] .film img{animation:none}
+
+  .intro-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(to top, rgba(250,250,250,.94) 0%, rgba(250,250,250,.42) 34%, rgba(250,250,250,0) 62%),
+               linear-gradient(to right, rgba(250,250,250,.8) 0%, rgba(250,250,250,.25) 34%, rgba(250,250,250,0) 58%)}
+  .intro-copy{position:relative;z-index:2;width:100%;max-width:1000px;margin:0 auto;
+    padding:clamp(22px,5vw,50px) 20px clamp(24px,5vw,46px);color:var(--ink-text)}
+  .intro-copy .eyebrow{color:var(--ink-mute)}
+  .intro-copy h1{font-size:clamp(40px,9vw,84px)}
+  .intro-copy .lede{max-width:40ch;color:var(--ink-dim)}
+  .tag{position:absolute;left:20px;top:16px;z-index:3;font-family:var(--mono);font-size:9.5px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);
+    background:rgba(250,250,250,.72);padding:5px 9px;border-radius:2px}
+
+  .bar{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+  .chip{font:inherit;font-size:11.5px;font-weight:600;padding:8px 13px;border-radius:2px;
+    border:1px solid var(--line);background:var(--ink-2);color:var(--fg-dim);cursor:pointer}
+  .chip:hover{border-color:var(--accent);color:var(--fg)}
+  .chip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-dim);font-weight:700}
+  td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11.5px}
+  .note{margin:12px 0 0;font-size:13px;color:var(--fg-dim);max-width:68ch}
+  .evid{margin-top:14px;border:1px solid var(--line);border-radius:3px;background:var(--panel);padding:12px}
+  .evid img{width:100%;height:auto;display:block;border-radius:2px}
+  .evid figcaption{margin-top:9px;font-size:12px;color:var(--fg-dim)}
+  .warn{margin-top:14px;padding:11px 13px;border-radius:3px;background:#221B06;border:1px solid #4A3A0C;color:#F0CE72;font-size:12.5px}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:var(--fg-dim);font-size:12.5px;max-width:70ch}
+  @media (prefers-reduced-motion:reduce){
+    .film-sway,.film,.film video,.film img{animation:none!important}
+  }
+</style>
+
+<section class="intro" id="intro" data-breathe="1" data-ink="1">
+  <span class="tag">Nền giấy · 60fps · xoay liên tục trái sang phải</span>
+  <div class="intro-media">
+    <div class="film-sway">
+      <div class="film" id="film">
+        <video id="vid" src="orbit-loop.mp4" poster="orbit-poster.webp" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>
+      </div>
+    </div>
+  </div>
+  <div class="intro-scrim"></div>
+  <div class="intro-copy">
+    <p class="eyebrow">Bích chương · mực manga</p>
+    <h1>Focus</h1>
+    <p class="lede">Lưng dàn thành cánh, từng thớ cơ khắc bằng nét mực; chữ FOCUS uốn theo vòm sọ.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="sechead">
+    <h2>Tắt bật từng nhịp</h2>
+    <p>để nghe ra cái nào làm gì</p>
+  </div>
+  <div class="bar" id="bar">
+    <button class="chip" type="button" data-t="breathe" aria-pressed="true">Nhịp thở</button>
+    <button class="chip" type="button" data-t="ink" aria-pressed="true">Nhịp mực</button>
+    <button class="chip" type="button" id="still">Xem bản dự phòng tĩnh</button>
+  </div>
+  <p class="note">Nhân vật xoay <strong>liên tục một hướng, không dừng</strong>, vòng 7,88 giây. Cộng ba nhịp CSS chồng lên, dải mở đầu không bao giờ lặp lại đúng một trạng thái cũ.</p>
+
+  <div class="sechead">
+    <h2>60fps</h2>
+    <p>nội suy thật, không nhân đôi frame</p>
+  </div>
+  <table>
+    <tr><th>Đo được</th><th>Kết quả</th></tr>
+    <tr><td>File gốc</td><td class="num">Container khai 60fps nhưng chỉ có <strong>239 frame duy nhất</strong> trên 602 — chuyển động thật chỉ <strong>23,86 fps</strong>. Đổi nhãn fps mà không nội suy thì chỉ là nhân đôi frame, không mượt thêm gì.</td></tr>
+    <tr><td>Chọn chế độ</td><td class="num">So <code>mci</code> (bù chuyển động) với <code>blend</code> ở cùng một mốc nằm giữa hai frame gốc: mci nét đơn, cạnh sạch; blend nhoè và ghép đôi thấy rõ ở viền dây lẫn bàn tay. Chọn mci.</td></tr>
+    <tr><td>Bản cuối</td><td class="num">473 frame / 7,88s = <strong>60,0 fps</strong> thật · 875 KB (CRF 30)</td></tr>
+    <tr><td>Hướng xoay</td><td class="num">Xác định từ footage: cánh tay giương đi từ <strong>trái khung sang phải</strong>. Clip gốc đã đúng hướng bạn muốn, không cần đảo.</td></tr>
+  </table>
+
+  <div class="sechead">
+    <h2>Nhịp thở</h2>
+    <p>ba chu kỳ lệch nhau</p>
+  </div>
+  <table>
+    <tr><th>Lớp</th><th>Chu kỳ</th><th>Làm gì</th></tr>
+    <tr><td>Nhịp thở</td><td class="num">5,2s</td><td>Không đối xứng: hít vào 36% chu kỳ, giữ một nhịp ngắn ở 45%, thở ra 55% còn lại — mỗi chặng một đường cong riêng. Kèm phồng <code>1 → 1.017</code> và nhô lên <code>-0.6%</code>. Đây là chỗ tạo cảm giác sống; dao động đối xứng cũ là lý do nó từng thấy máy móc.</td></tr>
+    <tr><td>Trôi ngang</td><td class="num">17s</td><td>Dịch ±0,35% rất chậm, chỉ để phá tính cơ khí của nhịp thở.</td></tr>
+    <tr><td>Nhịp mực</td><td class="num">7,3s</td><td>Tương phản <code>1.03 → 1.15</code>. Vùng tối sâu xuống nhiều hơn xám trung nên sợi dây đậm lên rõ, cơ thể gần như không đổi.</td></tr>
+  </table>
+  <p class="note">Ba chu kỳ 5,2 / 7,3 / 17 giây không chia hết cho nhau, nên tổ hợp chỉ lặp lại sau hơn 11 phút — mắt không bao giờ bắt được chu kỳ.</p>
+
+  <div class="sechead">
+    <h2>Vật thừa</h2>
+    <p>xoá ở mọi frame, có kiểm lại</p>
+  </div>
+  <table>
+    <tr><th>Bước</th><th>Số đo</th></tr>
+    <tr><td>Cách xoá</td><td class="num">Gán nhãn vùng liên thông từng frame, giữ khối tối lớn nhất (nhân vật), xoá mọi khối rời. Tự bám theo vật thừa khi nó xoay, không cần mặt nạ cố định.</td></tr>
+    <tr><td>Kết quả</td><td class="num">362.846 pixel đã xoá trên 602 frame; khối lạ lớn nhất 11.709 pixel. Đã xem đối chiếu trước/sau: vật thừa sạch, nhân vật nguyên vẹn.</td></tr>
+    <tr><td>Tô lại</td><td class="num">Trung vị nền theo <strong>từng hàng</strong>, không phải màu phẳng. Chênh lệch đo được lên tới <strong>17 giá trị</strong> — tô phẳng là lộ thành ô sáng, đúng cái bẫy đã làm hỏng bản vá ảnh tĩnh lần trước.</td></tr>
+  </table>
+
+  <div class="sechead">
+    <h2>Cái tôi không làm được</h2>
+    <p>nói thẳng, kèm số đo</p>
+  </div>
+  <p class="note">
+    <strong>Lặp một hướng liền mạch — đã giải được.</strong> Clip gốc <em>không</em> khép kín 360°:
+    tôi so frame đầu với cả 239 frame, khớp nhất là frame 202 nhưng vẫn lệch <strong>22,34/255</strong>, và đường cong
+    lệch (48 → 56 → 37 → 23 → 43 → 50) không bao giờ về gần 0. Cách khép: cắt tại frame 202 rồi <strong>hoà tan 12
+    frame đầu</strong> với 12 frame đuôi, theo hướng bắt đầu chủ yếu là đuôi rồi chuyển dần sang đầu — như vậy nó bắc
+    qua đúng điểm nối. Lệch điểm nối tụt từ <strong>50,30 xuống 6,29</strong>. Vòng lặp 190 frame, 7,88 giây.
+    Cái giá phải trả: nửa giây đầu mỗi vòng có một cú hoà tan rất nhẹ — bạn xem trên dải trên rồi nói nếu thấy rõ quá.
+    Lần dựng đầu tôi ghi frame hoà tan vào đuôi thay vì đầu nên chỉ giảm được xuống 22,94, tức gần như vô ích.</p>
+  <p class="note">
+    <strong>Sợi dây dịch chuyển độc lập:</strong> không tách được khỏi cơ thể. Ngưỡng sáng 35/50/70 đều kéo theo nguyên
+    khối tối của cánh tay và bắp đùi, vì 12,4% pixel nằm ở 0–31 và 5,7% ở 32–63 — sợi dây và vùng tối cơ thể trùng dải
+    giá trị. Nhịp mực là cách thay thế: chồng đúng pixel nên không lệch khung, không bóng ma.
+  </p>
+
+  <div class="warn">
+    Đây là <strong>mẫu</strong>. Trang thật <code>khanhdat231194-cpu.github.io/kaizen/posters/focus/</code> chưa bị sửa một dòng nào.
+  </div>
+
+  <footer>
+    <p>Bản thật sẽ thêm: dưới 768px và khi bật giảm chuyển động thì không tải video, chỉ hiện ảnh tĩnh; tải muộn sau khi trang vẽ xong; video lỗi thì ảnh tĩnh ở lại. Watermark "Dreamina AI" vẫn còn — nó là chữ <em>sáng</em> nên phép giữ-khối-tối-lớn-nhất không chạm tới; xoá được bằng ffmpeg phủ đúng màu nền.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var intro = document.getElementById("intro");
+  var bar = document.getElementById("bar");
+  var film = document.getElementById("film");
+  var VIDEO = '<video id="vid" src="orbit-loop.mp4" poster="orbit-poster.webp" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>';
+  var STILL = '<img src="orbit-poster.webp" alt="Khung hinh tinh cua vong xoay.">';
+
+  bar.addEventListener("click", function(e){
+    var b = e.target.closest("[data-t]");
+    if (b) {
+      var k = b.getAttribute("data-t");
+      var on = intro.getAttribute("data-" + k) !== "0";
+      intro.setAttribute("data-" + k, on ? "0" : "1");
+      b.setAttribute("aria-pressed", String(!on));
+      return;
+    }
+    if (e.target.id === "still") {
+      var was = film.getAttribute("data-still") === "1";
+      film.setAttribute("data-still", was ? "0" : "1");
+      film.innerHTML = was ? VIDEO : STILL;
+      e.target.textContent = was ? "Xem bản dự phòng tĩnh" : "Quay lại video";
+    }
+  });
+})();
+</script>

@@ -1,0 +1,14 @@
+{
+  "name": "kaizen-tools",
+  "private": true,
+  "description": "Script sinh tai san cho site Kaizen: PNG logo, hinh dong Lottie, trang bich chuong, video man mo dau",
+  "scripts": {
+    "logo": "node logo-assets/render.js",
+    "hero": "node hero/gen-hero.js && node hero/render-poster.js",
+    "posters:pages": "node posters/gen.js"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "sharp": "0.35.4"
+  }
+}

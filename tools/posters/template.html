@@ -1,0 +1,341 @@
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --ink:#07080A; --ink-2:#0E1013; --panel:#14171B; --line:#242A31;
+    --fg:#EBEDF0; --fg-dim:#8A929B;
+    --accent:__ACCENT__; --accent-rgb:__ACCENT_RGB__; --accent-ui:__ACCENT_UI__;
+    --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+    --body:Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --display:Anton, Haettenschweiler, Impact, "Arial Narrow", sans-serif;
+    --mx:50%; --my:42%;
+    --lightI:0.55; --spotR:60%; --sheenI:0.5; --grainI:0.18; --vigI:0.45; --glowI:0.22;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ink);color:var(--fg);font-family:var(--body);line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:26px 46px}
+
+  header{margin-bottom:20px}
+  .eyebrow{margin:0;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-ui)}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5.6vw,46px);line-height:.98;margin:9px 0 0;text-transform:uppercase}
+  .cap{margin:9px 0 0;max-width:56ch;color:var(--fg-dim);font-size:14px}
+
+  .shell{display:grid;gap:22px;grid-template-columns:1fr;align-items:start}
+  @media (min-width:900px){.shell{grid-template-columns:minmax(0,1fr) 304px;gap:28px}}
+
+  .stagewrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .stage{position:relative;width:100%;max-width:min(430px,82vw);perspective:1300px}
+  .glow{position:absolute;inset:6%;border-radius:50%;background:var(--accent);filter:blur(52px);opacity:var(--glowI);transform:scale(.9);pointer-events:none}
+  .art{position:relative;aspect-ratio:__RW__/__RH__;border-radius:7px;overflow:hidden;transform-style:preserve-3d;box-shadow:0 26px 60px -24px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.07);will-change:transform}
+  .art img{display:block;width:100%;height:100%;object-fit:cover}
+  .lay{position:absolute;inset:0;pointer-events:none}
+  .spot{background:radial-gradient(circle at var(--mx) var(--my), rgba(var(--accent-rgb),.75) 0%, rgba(var(--accent-rgb),.18) calc(var(--spotR) * .55), transparent var(--spotR));mix-blend-mode:screen;opacity:var(--lightI)}
+  .sheenbox{overflow:hidden}
+  .sheen{position:absolute;top:-25%;left:0;width:300%;height:150%;background:linear-gradient(104deg, transparent 40%, rgba(255,255,255,.16) 47%, rgba(var(--accent-rgb),.13) 52%, transparent 60%);mix-blend-mode:overlay;opacity:var(--sheenI);will-change:transform}
+  .grain{opacity:var(--grainI);mix-blend-mode:overlay;background-repeat:repeat;background-size:170px 170px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='170' height='170' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}
+  .vig{background:radial-gradient(ellipse at 50% 45%, transparent 42%, rgba(0,0,0,.92) 100%);opacity:var(--vigI)}
+
+  .quickbar{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+  .chip{font:inherit;font-size:11.5px;font-weight:600;padding:7px 13px;border-radius:2px;border:1px solid var(--line);background:var(--ink-2);color:var(--fg-dim);cursor:pointer}
+  .chip:hover{border-color:var(--accent);color:var(--fg)}
+  .chip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:16px}
+  .panel h2{margin:0 0 3px;font-family:var(--display);font-weight:400;font-size:16px;letter-spacing:.03em;text-transform:uppercase}
+  .panel .hint{margin:0 0 14px;font-size:11.5px;color:var(--fg-dim)}
+  .group{border-top:1px solid var(--line);padding-top:13px;margin-top:13px}
+  .group:first-of-type{border-top:0;padding-top:0;margin-top:0}
+  .glabel{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ui);margin:0 0 9px}
+
+  .row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px 10px;margin-bottom:11px}
+  .row label{font-size:12.5px}
+  .row output{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums;color:var(--fg-dim)}
+  .row input[type=range]{grid-column:1/-1;width:100%;height:20px;margin:0;accent-color:var(--accent)}
+  .row input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .row.off{opacity:.38}
+
+  .sw{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0;font-size:12.5px;cursor:pointer}
+  .sw input{appearance:none;-webkit-appearance:none;width:38px;height:21px;border-radius:11px;background:#2A3138;border:1px solid var(--line);position:relative;cursor:pointer;flex:0 0 auto;margin:0}
+  .sw input::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:var(--fg-dim);transition:transform .16s ease, background .16s ease}
+  .sw input:checked{background:color-mix(in srgb, var(--accent) 34%, #2A3138)}
+  .sw input:checked::after{transform:translateX(17px);background:var(--accent)}
+  .sw input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .acts{display:flex;gap:7px;margin-top:15px;flex-wrap:wrap}
+  .rm{margin:13px 0 0;padding:9px 11px;border-radius:3px;background:#221B06;border:1px solid #4A3A0C;color:#F0CE72;font-size:11.5px}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:15px;color:var(--fg-dim);font-size:11.5px;max-width:74ch}
+
+  body.bare .wrap{padding-block:14px}
+  body.bare header,body.bare .panel,body.bare footer,body.bare .quickbar{display:none}
+  body.bare .stage{max-width:min(560px,92vw)}
+  .unbare{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:30;opacity:.5}
+  .unbare:hover{opacity:1}
+  body:not(.bare) .unbare{display:none}
+  @media (prefers-reduced-motion:reduce){.sw input::after{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">__EYEBROW__</p>
+    <h1>__NAME__</h1>
+    <p class="cap">__CAPTION__</p>
+  </header>
+
+  <div class="shell">
+    <div class="stagewrap">
+      <div class="stage" id="stage">
+        <div class="glow" id="glow"></div>
+        <div class="art" id="art">
+          <img src="__IMG__" alt="__ALT__">
+          <div class="lay sheenbox"><div class="sheen" id="sheen"></div></div>
+          <div class="lay spot" id="spot"></div>
+          <div class="lay grain" id="grain"></div>
+          <div class="lay vig" id="vig"></div>
+        </div>
+      </div>
+      <div class="quickbar">
+        <button class="chip" type="button" data-preset="still">Tĩnh</button>
+        <button class="chip" type="button" data-preset="soft" aria-pressed="true">Nhẹ</button>
+        <button class="chip" type="button" data-preset="strong">Mạnh</button>
+        <button class="chip" type="button" id="bareBtn">Ẩn giao diện</button>
+      </div>
+    </div>
+
+    <form class="panel" id="panel" autocomplete="off">
+      <h2>Cài đặt</h2>
+      <p class="hint">Đưa chuột lên bích chương để nghiêng và rê đèn. Mọi thiết lập tự lưu trên máy bạn.</p>
+      <div id="rmNote" class="rm" hidden>Hệ thống của bạn đang bật chế độ giảm chuyển động, nên tôi tắt sẵn phần lắc. Bật lại bên dưới nếu bạn muốn.</div>
+
+      <div class="group">
+        <p class="glabel">Chuyển động</p>
+        <label class="sw" for="tilt">Nghiêng theo con trỏ <input type="checkbox" id="tilt" checked></label>
+        <label class="sw" for="sway">Tự lắc nhẹ <input type="checkbox" id="sway" checked></label>
+        <div class="row" id="rowAmp">
+          <label for="amp">Biên độ lắc</label><output id="ampOut">30</output>
+          <input type="range" id="amp" min="0" max="100" step="1" value="30">
+        </div>
+        <div class="row" id="rowSpeed">
+          <label for="speed">Tốc độ</label><output id="speedOut">100%</output>
+          <input type="range" id="speed" min="10" max="220" step="5" value="100">
+        </div>
+      </div>
+
+      <div class="group">
+        <p class="glabel">Ánh sáng</p>
+        <label class="sw" for="follow">Đèn theo con trỏ <input type="checkbox" id="follow" checked></label>
+        <div class="row" id="rowLight">
+          <label for="light">Cường độ đèn</label><output id="lightOut">55</output>
+          <input type="range" id="light" min="0" max="100" step="1" value="55">
+        </div>
+        <div class="row" id="rowSpotR">
+          <label for="spotR">Bán kính đèn</label><output id="spotROut">60</output>
+          <input type="range" id="spotR" min="15" max="95" step="1" value="60">
+        </div>
+        <label class="sw" for="sheenOn">Vệt sáng quét <input type="checkbox" id="sheenOn" checked></label>
+        <div class="row" id="rowSheen">
+          <label for="sheenI">Độ đậm vệt</label><output id="sheenIOut">50</output>
+          <input type="range" id="sheenI" min="0" max="100" step="1" value="50">
+        </div>
+        <div class="row" id="rowGlow">
+          <label for="glow">Hào quang viền</label><output id="glowOut">22</output>
+          <input type="range" id="glow" min="0" max="100" step="1" value="22">
+        </div>
+      </div>
+
+      <div class="group">
+        <p class="glabel">Chất phim</p>
+        <div class="row" id="rowGrain">
+          <label for="grain">Hạt nhiễu</label><output id="grainOut">18</output>
+          <input type="range" id="grain" min="0" max="100" step="1" value="18">
+        </div>
+        <div class="row" id="rowVig">
+          <label for="vig">Tối viền</label><output id="vigOut">45</output>
+          <input type="range" id="vig" min="0" max="100" step="1" value="45">
+        </div>
+      </div>
+
+      <div class="acts">
+        <button class="chip" type="button" id="resetBtn">Đặt lại</button>
+      </div>
+    </form>
+  </div>
+
+  <footer>
+    <p>Bích chương gốc là ảnh bạn cung cấp; trang này chỉ dựng lớp chuyển động và ánh sáng lên trên, không sửa vào ảnh. Ảnh giữ nguyên tỉ lệ __RW__×__RH__.</p>
+  </footer>
+</div>
+<button class="chip unbare" type="button" id="unbareBtn">Hiện giao diện</button>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "poster-__KEY__-v1";
+  var root = document.documentElement;
+  var art = document.getElementById("art");
+  var sheen = document.getElementById("sheen");
+  var panel = document.getElementById("panel");
+
+  var PRESETS = {
+    still:  { tilt:false, sway:false, amp:0,  speed:100, follow:true, light:22, spotR:70, sheenOn:false, sheenI:0,  glow:10, grain:6,  vig:32 },
+    soft:   { tilt:true,  sway:true,  amp:30, speed:100, follow:true, light:55, spotR:60, sheenOn:true,  sheenI:50, glow:22, grain:18, vig:45 },
+    strong: { tilt:true,  sway:true,  amp:72, speed:155, follow:true, light:86, spotR:44, sheenOn:true,  sheenI:78, glow:46, grain:32, vig:58 }
+  };
+  var NUM = ["amp","speed","light","spotR","sheenI","glow","grain","vig"];
+  var BOOL = ["tilt","sway","follow","sheenOn"];
+
+  var S = Object.assign({}, PRESETS.soft);
+  var reduce = false;
+  try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(e) {}
+
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e) {}
+  if (saved && typeof saved === "object") {
+    NUM.concat(BOOL).forEach(function(k){ if (k in saved) S[k] = saved[k]; });
+  } else if (reduce) {
+    S.tilt = false; S.sway = false;
+    document.getElementById("rmNote").hidden = false;
+  }
+
+  function save(){
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+  }
+
+  /* ---- đẩy state vào CSS + input ---- */
+  function paint(){
+    root.style.setProperty("--lightI", (S.light/100).toFixed(3));
+    root.style.setProperty("--spotR", S.spotR + "%");
+    root.style.setProperty("--sheenI", S.sheenOn ? (S.sheenI/100).toFixed(3) : "0");
+    root.style.setProperty("--grainI", (S.grain/100 * 0.55).toFixed(3));
+    root.style.setProperty("--vigI", (S.vig/100).toFixed(3));
+    root.style.setProperty("--glowI", (S.glow/100 * 0.65).toFixed(3));
+
+    BOOL.forEach(function(k){ var el = document.getElementById(k); if (el) el.checked = !!S[k]; });
+    NUM.forEach(function(k){
+      var el = document.getElementById(k), out = document.getElementById(k + "Out");
+      if (el) el.value = S[k];
+      if (out) out.textContent = (k === "speed") ? S[k] + "%" : S[k];
+    });
+
+    dim("rowAmp",   S.tilt || S.sway);
+    dim("rowSpeed", S.sway || S.sheenOn || !S.follow);
+    dim("rowSpotR", S.light > 0);
+    dim("rowLight", true);
+    dim("rowSheen", S.sheenOn);
+  }
+  function dim(id, on){
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle("off", !on);
+  }
+
+  /* ---- vòng lặp ---- */
+  var t = 0, last = 0, running = false, raf = 0;
+  var px = 0, py = 0, tx = 0, ty = 0, pointerIn = false;
+
+  function needsLoop(){
+    if (S.sway || S.sheenOn) return true;
+    if (!S.follow && S.light > 0) return true;
+    if (S.tilt && (Math.abs(tx - px) > 0.001 || Math.abs(ty - py) > 0.001)) return true;
+    return false;
+  }
+  function ensureLoop(){
+    if (running) return;
+    running = true; last = 0;
+    raf = requestAnimationFrame(frame);
+  }
+  function frame(now){
+    var dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
+    last = now;
+    t += dt * (S.speed / 100);
+
+    var ampDeg = S.amp / 100 * 2.4;
+    var maxTilt = S.amp / 100 * 13;
+
+    px += (tx - px) * 0.075;
+    py += (ty - py) * 0.075;
+
+    var rx = 0, ry = 0, rz = 0, dy = 0;
+    if (S.tilt) { ry += px * maxTilt; rx += -py * maxTilt; }
+    if (S.sway) {
+      ry += Math.sin(t * 0.9) * ampDeg;
+      rx += Math.cos(t * 0.62) * ampDeg * 0.7;
+      rz += Math.sin(t * 0.41) * ampDeg * 0.38;
+      dy += Math.sin(t * 0.55) * (S.amp / 100 * 5);
+    }
+    art.style.transform = "rotateX(" + rx.toFixed(3) + "deg) rotateY(" + ry.toFixed(3)
+      + "deg) rotate(" + rz.toFixed(3) + "deg) translate3d(0," + dy.toFixed(2) + "px,0)";
+
+    if (S.sheenOn) {
+      sheen.style.transform = "translateX(" + (((t * 11) % 250) - 75).toFixed(2) + "%)";
+    }
+
+    if (!(S.follow && pointerIn)) {
+      root.style.setProperty("--mx", (50 + Math.sin(t * 0.5) * 17).toFixed(2) + "%");
+      root.style.setProperty("--my", (42 + Math.cos(t * 0.37) * 13).toFixed(2) + "%");
+    }
+
+    if (needsLoop()) { raf = requestAnimationFrame(frame); }
+    else { running = false; }
+  }
+
+  /* ---- con trỏ ---- */
+  var stage = document.getElementById("stage");
+  function onMove(e){
+    var r = art.getBoundingClientRect();
+    var nx = (e.clientX - r.left) / r.width, ny = (e.clientY - r.top) / r.height;
+    tx = Math.max(-1, Math.min(1, nx * 2 - 1));
+    ty = Math.max(-1, Math.min(1, ny * 2 - 1));
+    pointerIn = true;
+    if (S.follow) {
+      root.style.setProperty("--mx", (nx * 100).toFixed(2) + "%");
+      root.style.setProperty("--my", (ny * 100).toFixed(2) + "%");
+    }
+    ensureLoop();
+  }
+  stage.addEventListener("pointermove", onMove);
+  stage.addEventListener("pointerleave", function(){
+    pointerIn = false; tx = 0; ty = 0; ensureLoop();
+  });
+
+  /* ---- điều khiển ---- */
+  panel.addEventListener("submit", function(e){ e.preventDefault(); });
+  panel.addEventListener("input", function(e){
+    var id = e.target.id;
+    if (NUM.indexOf(id) >= 0) { S[id] = +e.target.value; }
+    else if (BOOL.indexOf(id) >= 0) { S[id] = e.target.checked; }
+    else { return; }
+    paint(); save(); ensureLoop();
+  });
+
+  var chips = document.querySelectorAll("[data-preset]");
+  function markPreset(name){
+    Array.prototype.forEach.call(chips, function(c){
+      c.setAttribute("aria-pressed", String(c.getAttribute("data-preset") === name));
+    });
+  }
+  Array.prototype.forEach.call(chips, function(c){
+    c.addEventListener("click", function(){
+      var name = c.getAttribute("data-preset");
+      S = Object.assign({}, PRESETS[name]);
+      markPreset(name); paint(); save(); ensureLoop();
+    });
+  });
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    S = Object.assign({}, PRESETS.soft);
+    markPreset("soft"); paint(); save(); ensureLoop();
+  });
+
+  /* ---- ẩn giao diện ---- */
+  function setBare(on){ document.body.classList.toggle("bare", on); }
+  document.getElementById("bareBtn").addEventListener("click", function(){ setBare(true); });
+  document.getElementById("unbareBtn").addEventListener("click", function(){ setBare(false); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") setBare(false); });
+
+  markPreset(null);
+  paint();
+  ensureLoop();
+})();
+</script>
